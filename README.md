@@ -1,3 +1,3 @@
-# Basic Example
+# Simple List Picke
 
-A simple [create-react-app](CRA-README.md) setup, showcasing one of the lastest React-Bootstrap components!
+A Simple react-bootstrap list picker to add/remove rows from left to right and vice versa.
