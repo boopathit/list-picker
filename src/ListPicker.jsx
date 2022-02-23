@@ -8,59 +8,98 @@ import {
   faAnglesLeft,
   faAnglesRight,
   faAngleLeft,
-  faAngleRight
+  faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
-const ListPicker = ({ leftRows = [], rightRows = [] }) => {
+const ListPicker = ({ leftRows = [], rightRows = [], onChange }) => {
   const [leftRowSelection, setLeftRowSelection] = useState(null);
   const [rightRowSelection, setRightRowSelection] = useState(null);
   const [leftRowList, setLeftRowList] = useState([...leftRows]);
   const [rightRowList, setRightRowList] = useState([...rightRows]);
 
+  //onchange selection of item in left list
   const onLeftRowSelect = (row) => {
     return () => {
       setLeftRowSelection(row);
     };
   };
 
+  //onchange selection of item in right list
   const onRightRowSelect = (row) => {
     return () => {
       setRightRowSelection(row);
     };
   };
 
+  //move all items from left to right
   const onAddAllLeftToRight = () => {
-    setRightRowList([...rightRowList, ...leftRowList]);
+    const tempLeftRows = [];
+    const tempRightRows = [...rightRowList, ...leftRowList];
+
     setLeftRowSelection(null);
-    setLeftRowList([]);
+    setLeftRowList(tempLeftRows);
+
+    setRightRowList(tempRightRows);
+
+    if (onChange) {
+      onChange(tempLeftRows, tempRightRows);
+    }
   };
 
+  //move selected item from left to right
   const onAddSelectedLeftToRight = () => {
     if (leftRowSelection === null) {
       return alert("no selection");
     }
-    setRightRowList([...rightRowList, leftRowSelection]);
-    const newLeftRowList = leftRowList.filter(
+
+    const tempLeftRows = leftRowList.filter(
       (row) => row.id !== leftRowSelection.id
     );
+    const tempRightRows = [...rightRowList, leftRowSelection];
+
+    setLeftRowList(tempLeftRows);
     setLeftRowSelection(null);
-    setLeftRowList(newLeftRowList);
-  };
-  const onAddAllRightToLeft = () => {
-    setLeftRowList([...rightRowList, ...leftRowList]);
-    setRightRowSelection(null);
-    setRightRowList([]);
+
+    setRightRowList(tempRightRows);
+
+    if (onChange) {
+      onChange(tempLeftRows, tempRightRows);
+    }
   };
 
+  //move all items from right to left
+  const onAddAllRightToLeft = () => {
+    const tempLeftRows = [...rightRowList, ...leftRowList];
+    const tempRightRows = [];
+
+    setLeftRowList(tempLeftRows);
+
+    setRightRowList(tempRightRows);
+    setRightRowSelection(null);
+
+    if (onChange) {
+      onChange(tempLeftRows, tempRightRows);
+    }
+  };
+
+  //move selected item from right to left
   const onAddSelectedRightToLeft = () => {
     if (rightRowSelection === null) {
       return alert("no selection");
     }
-    setLeftRowList([...leftRowList, rightRowSelection]);
-    const newRightRowList = rightRowList.filter(
+
+    const tempLeftRows = [...leftRowList, rightRowSelection];
+    const tempRightRows = rightRowList.filter(
       (row) => row.id !== rightRowSelection.id
     );
+
+    setLeftRowList(tempLeftRows);
+
+    setRightRowList(tempRightRows);
     setRightRowSelection(null);
-    setRightRowList(newRightRowList);
+
+    if (onChange) {
+      onChange(tempLeftRows, tempRightRows);
+    }
   };
 
   return (
